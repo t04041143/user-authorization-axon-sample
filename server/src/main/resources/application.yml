@@ -1,0 +1,22 @@
+server:
+  port: 9580
+spring:
+  application:
+    name: cmrs
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/cqrs?serverTimezone=UTC
+#    username: root
+#    password: 123456
+#    sql-script-encoding: UTF-8
+#  jpa:
+#    database: MYSQL
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: create-drop
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect #指定InnoDB为默认引擎
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: user-authorization
