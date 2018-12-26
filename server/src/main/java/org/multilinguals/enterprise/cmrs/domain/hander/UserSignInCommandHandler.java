@@ -38,8 +38,6 @@ public class UserSignInCommandHandler extends AbstractCommandHandler {
 
         Aggregate<UserPassword> userPasswordAggregate = userPasswordRepositoryAggregateRepository.load(userPasswordId);
 
-        String passwordHashValue = userPasswordAggregate.invoke(UserPassword::getHashValue);
-
         // 判断用户密码是否正确
         if (userPasswordAggregate.invoke(userPassword -> userPassword.passwordIsValid(command.getPassword()))) {
             // 创建用户会话
