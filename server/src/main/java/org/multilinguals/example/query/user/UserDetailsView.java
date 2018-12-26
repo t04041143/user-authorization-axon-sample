@@ -11,7 +11,7 @@ public class UserDetailsView {
     @Id
     private String id;
 
-    private String nickname;
+    private String realName;
 
     private List<Account> accountList = Collections.emptyList();
 
@@ -41,12 +41,12 @@ public class UserDetailsView {
         this.id = id;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getRealName() {
+        return realName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
     public List<Account> getAccountList() {
