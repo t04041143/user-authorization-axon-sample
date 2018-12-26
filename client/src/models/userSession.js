@@ -31,6 +31,7 @@ export default {
   effects: {
     * signInSucceeded({ payload }, { put }) {
       yield put({ type: "save", payload: { id: payload.userSessionId, userId: payload.userId } });
+      localStorage.setItem("userId", payload.userId);
       yield put(routerRedux.push("/sign-in-success"));
     }
   },

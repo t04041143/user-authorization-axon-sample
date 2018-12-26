@@ -1,3 +1,4 @@
+import { getUserDetails } from "../services/userService";
 import { WS } from "../constants/eventConstants";
 import eventBus from "../utils/eventbus";
 
@@ -7,7 +8,10 @@ export default {
   state: {
     id: null,
     nickname: null,
-    status: null,
+    accountList: [],
+    userSessionId: null,
+    userSessionExpiredAt: null,
+    userPasswordId: null,
     createdAt: null,
     updatedAt: null
   },
@@ -21,8 +25,9 @@ export default {
   },
 
   effects: {
-    * fetch({ payload }, { call, put }) {  // eslint-disable-line
-      yield put({ type: "save" });
+    * getUserDetails({ payload }, { call, put }) {  // eslint-disable-line
+      let response = yield call(getUserDetails, localStorage.getItem("userId"));
+      yield put({ type: "save", payload: response.data });
     }
   },
 
