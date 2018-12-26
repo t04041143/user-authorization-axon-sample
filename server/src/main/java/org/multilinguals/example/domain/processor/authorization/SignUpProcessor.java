@@ -5,7 +5,6 @@ import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.eventhandling.saga.EndSaga;
 import org.axonframework.eventhandling.saga.SagaEventHandler;
-import org.axonframework.eventhandling.saga.SagaLifecycle;
 import org.axonframework.eventhandling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
 import org.multilinguals.example.domain.aggregations.authorization.AccountId;
@@ -13,8 +12,8 @@ import org.multilinguals.example.domain.aggregations.authorization.command.BindA
 import org.multilinguals.example.domain.aggregations.authorization.command.CompleteAccountSignUpCommand;
 import org.multilinguals.example.domain.aggregations.authorization.command.DeleteAccountCommand;
 import org.multilinguals.example.domain.aggregations.authorization.event.AccountBoundUserEvent;
-import org.multilinguals.example.domain.aggregations.authorization.event.AccountSignedUpEvent;
 import org.multilinguals.example.domain.aggregations.authorization.event.AccountSignUpFailedEvent;
+import org.multilinguals.example.domain.aggregations.authorization.event.AccountSignedUpEvent;
 import org.multilinguals.example.domain.aggregations.password.command.BindUserPasswordToUserCommand;
 import org.multilinguals.example.domain.aggregations.password.command.DeleteUserPasswordCommand;
 import org.multilinguals.example.domain.aggregations.password.command.SignUpUserPasswordCommand;
@@ -37,10 +36,6 @@ public class SignUpProcessor extends AbstractProcessor {
     private AccountId accountId;
 
     private String userPasswordId;
-
-    private boolean userIdentityBoundUser = false;
-
-    private boolean userPasswordBoundUser = false;
 
     @StartSaga
     @SagaEventHandler(associationProperty = "accountId")
@@ -76,25 +71,17 @@ public class SignUpProcessor extends AbstractProcessor {
     @SagaEventHandler(associationProperty = "accountId")
     public void handle(UserCreatedEvent event) {
         this.commandGateway.send(new BindAccountToUserCommand(accountId, event.getUserId(), event.getSenderId()));
-        this.commandGateway.send(new BindUserPasswordToUserCommand(userPasswordId, event.getUserId(), event.getSenderId()));
     }
 
     @SagaEventHandler(associationProperty = "accountId")
     public void handle(AccountBoundUserEvent event) {
-        this.userIdentityBoundUser = true;
-        if (this.userPasswordBoundUser) {
-            commandGateway.send(new CompleteAccountSignUpCommand(event.getUserId(), accountId, userPasswordId, event.getSenderId()));
-            SagaLifecycle.end();
-        }
+        this.commandGateway.send(new BindUserPasswordToUserCommand(userPasswordId, event.getUserId(), event.getSenderId()));
     }
 
     @SagaEventHandler(associationProperty = "userPasswordId")
+    @EndSaga
     public void handle(UserPasswordBoundUserEvent event) {
-        this.userPasswordBoundUser = true;
-        if (this.userIdentityBoundUser) {
-            commandGateway.send(new CompleteAccountSignUpCommand(event.getUserId(), accountId, userPasswordId, event.getSenderId()));
-            SagaLifecycle.end();
-        }
+        commandGateway.send(new CompleteAccountSignUpCommand(event.getUserId(), accountId, userPasswordId, event.getSenderId()));
     }
 
     @SagaEventHandler(associationProperty = "accountId")

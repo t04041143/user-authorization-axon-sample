@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
 import java.util.Date;
 
 @Component
@@ -52,7 +51,7 @@ public class UserEventHandler {
             user.setUserPasswordId(event.getUserPasswordId());
             return Mono.just(user);
         }).subscribe(user ->
-                this.userDetailsViewRepository.save(user).block(Duration.ofSeconds(1))
+                this.userDetailsViewRepository.save(user).subscribe()
         );
     }
 
