@@ -13,7 +13,7 @@
 MongoDB 4.X.X
 
 ## 领域模型：
-![DDD Model](https://github.com/t04041143/user-authorization-axon-sample/blob/master/doc/design/用户与认证.png)
+![DDD Model](https://github.com/t04041143/user-authorization-axon-sample/blob/master/doc/design/用户与认证领域模型.png)
 
 ## 流程图：
 ![](https://github.com/t04041143/user-authorization-axon-sample/blob/master/doc/design/用户使用账号密码注册.png)
