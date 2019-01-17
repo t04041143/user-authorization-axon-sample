@@ -3,10 +3,6 @@ package org.multilinguals.example.infrastructure.config;
 import com.mongodb.MongoClient;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
-import org.axonframework.mongo.eventhandling.saga.repository.MongoSagaStore;
-import org.axonframework.mongo.eventsourcing.eventstore.MongoEventStorageEngine;
-import org.axonframework.mongo.eventsourcing.eventstore.StorageStrategy;
-import org.axonframework.mongo.eventsourcing.eventstore.documentpercommit.DocumentPerCommitStorageStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +12,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import javax.inject.Inject;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "org.multilinguals.enterprise.cmrs.query")
+@EnableMongoRepositories(basePackages = "org.multilinguals.example.query")
 public class StorageConfig {
     @Value("${spring.data.mongodb.database}")
     private String mongoDatabase;
