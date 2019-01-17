@@ -1,6 +1,9 @@
 package org.multilinguals.example.query.user;
 
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface UserDetailsViewRepository extends ReactiveMongoRepository<UserDetailsView, String> {
+import java.util.List;
+
+public interface UserDetailsViewRepository extends MongoRepository<UserDetailsView, String> {
+    public List<UserDetailsView> findByUserSessionId(String sessionId);
 }

@@ -1,19 +1,19 @@
 package org.multilinguals.example.query.user;
 
+import org.multilinguals.example.infrastructure.persistence.AbstractMongoEntity;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Version;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class UserDetailsView {
+public class UserDetailsView extends AbstractMongoEntity {
     @Id
     private String id;
 
     private String realName;
 
-    private List<Account> accountList = Collections.emptyList();
+    private List<UserAccount> accountViewList = Collections.emptyList();
 
     private String userSessionId;
 
@@ -25,8 +25,6 @@ public class UserDetailsView {
 
     private Date updatedAt;
 
-    @Version
-    private Long version;
 
     public UserDetailsView(String id, Date createdAt) {
         this.id = id;
@@ -49,12 +47,12 @@ public class UserDetailsView {
         this.realName = realName;
     }
 
-    public List<Account> getAccountList() {
-        return accountList;
+    public List<UserAccount> getAccountViewList() {
+        return accountViewList;
     }
 
-    public void setAccountList(List<Account> accountList) {
-        this.accountList = accountList;
+    public void setAccountViewList(List<UserAccount> accountViewList) {
+        this.accountViewList = accountViewList;
     }
 
     public String getUserSessionId() {
@@ -97,15 +95,7 @@ public class UserDetailsView {
         this.updatedAt = updatedAt;
     }
 
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    public void setAccount(Account account) {
-        this.accountList.add(account);
+    public void setUserAccount(UserAccount userAccount) {
+        this.accountViewList.add(userAccount);
     }
 }
