@@ -51,6 +51,8 @@ public class RequestValidationFilter extends BasicAuthenticationFilter {
         if (userList != null && userList.size() > 0) {
             ArrayList<GrantedAuthority> authorities = new ArrayList<>();
             String userId = userList.get(0).getId();
+
+            request.setAttribute("reqSenderId", userId);
             authorities.add(new GrantedAuthorityImpl(userId));
             return new UsernamePasswordAuthenticationToken(userId, null, authorities);
         } else {
