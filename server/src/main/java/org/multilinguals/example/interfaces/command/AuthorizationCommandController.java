@@ -2,7 +2,7 @@ package org.multilinguals.example.interfaces.command;
 
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.commandhandling.model.ConcurrencyException;
+import org.axonframework.commandhandling.model.AggregateNotFoundException;
 import org.multilinguals.example.command.aggregate.user.UserId;
 import org.multilinguals.example.command.aggregate.usersession.UserSessionId;
 import org.multilinguals.example.command.handler.signin.SignInWithPasswordCommand;
@@ -51,8 +51,8 @@ public class AuthorizationCommandController {
         try {
             Tuple2<UserSessionId, UserId> result = commandGateway.sendAndWait(command);
             return new CommandResponse<>(new UserSignInDTO(result.getT1().getIdentifier(), result.getT2().getIdentifier()));
-        } catch (ConcurrencyException ex) {
-            throw new CMRSHTTPException(HttpServletResponse.SC_CONFLICT, AuthResultCode.SIGNED_UP_ACCOUNT);
+        } catch (AggregateNotFoundException ex) {
+            throw new CMRSHTTPException(HttpServletResponse.SC_UNAUTHORIZED, AuthResultCode.AUTHORIZE_FAILED);
         }
     }
 }
