@@ -11,7 +11,7 @@ public class BindUserToUserPasswordCommand extends AbstractCommand {
 
     private UserId userId;
 
-    public BindUserToUserPasswordCommand(UserPasswordId userPasswordId, UserId userId) {
+    public BindUserToUserPasswordCommand(UserId userId, UserPasswordId userPasswordId) {
         this.userPasswordId = userPasswordId;
         this.userId = userId;
     }

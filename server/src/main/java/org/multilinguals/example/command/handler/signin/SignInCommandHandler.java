@@ -46,13 +46,18 @@ public class SignInCommandHandler extends AbstractCommandHandler {
                 this.commandGateway.sendAndWait(new BindUserToAccountCommand(accountId, accountUserId));
             }
 
-            // 检查账号有无关联用户
+            // 获取用户密码实例
             Aggregate<UserPassword> userPasswordAggregate = userPasswordRepositoryAggregateRepository.load(userPasswordId.getIdentifier());
             UserId passwordUserId = userPasswordAggregate.invoke(UserPassword::getUserId);
 
             // 如果密码没有关联用户，那么也需要关联
             if (passwordUserId == null) {
-                this.commandGateway.sendAndWait(new BindUserToUserPasswordCommand(userPasswordId, accountUserId));
+                this.commandGateway.sendAndWait(new BindUserToUserPasswordCommand(accountUserId, userPasswordId));
+            }
+
+            // 判断密码是否正确
+            if (!userPasswordAggregate.invoke(userPassword -> userPassword.validPassword(command.getPassword()))) {
+                throw new UserPasswordInvalidException();
             }
 
             // 创建一个用户会话

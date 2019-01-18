@@ -39,7 +39,7 @@ public class UserPassword {
     }
 
     @CommandHandler
-    public UserPassword(BindUserToUserPasswordCommand command) {
+    public void handler(BindUserToUserPasswordCommand command) {
         apply(new UserPasswordBoundUserEvent(new UserPasswordId(), command.getUserId()));
     }
 
@@ -57,6 +57,10 @@ public class UserPassword {
 
     private String hashInputPassword(String input) {
         return DigestUtils.md5DigestAsHex(input.getBytes());
+    }
+
+    public Boolean validPassword(String password) {
+        return this.hashValue.equals(hashInputPassword(password));
     }
 
     public UserPasswordId getId() {

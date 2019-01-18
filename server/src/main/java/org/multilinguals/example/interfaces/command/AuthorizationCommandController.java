@@ -12,6 +12,7 @@ import org.multilinguals.example.infrastructure.data.Tuple2;
 import org.multilinguals.example.infrastructure.dto.CommandResponse;
 import org.multilinguals.example.infrastructure.dto.user.UserSignInDTO;
 import org.multilinguals.example.infrastructure.exception.aggregate.AccountSignedUpException;
+import org.multilinguals.example.infrastructure.exception.aggregate.UserPasswordInvalidException;
 import org.multilinguals.example.infrastructure.exception.http.CMRSHTTPException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,6 +54,12 @@ public class AuthorizationCommandController {
             return new CommandResponse<>(new UserSignInDTO(result.getT1().getIdentifier(), result.getT2().getIdentifier()));
         } catch (AggregateNotFoundException ex) {
             throw new CMRSHTTPException(HttpServletResponse.SC_UNAUTHORIZED, AuthResultCode.AUTHORIZE_FAILED);
+        } catch (CommandExecutionException ex) {
+            if (ex.getCause() instanceof UserPasswordInvalidException) {
+                throw new CMRSHTTPException(HttpServletResponse.SC_UNAUTHORIZED, AuthResultCode.AUTHORIZE_FAILED);
+            } else {
+                throw ex;
+            }
         }
     }
 }
