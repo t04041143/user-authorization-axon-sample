@@ -4,7 +4,7 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.multilinguals.example.command.aggregate.account.command.BindAccountToUserCommand;
+import org.multilinguals.example.command.aggregate.account.command.BindUserToAccountCommand;
 import org.multilinguals.example.command.aggregate.account.command.BindUserPasswordToAccountCommand;
 import org.multilinguals.example.command.aggregate.account.command.SignUpAccountCommand;
 import org.multilinguals.example.command.aggregate.account.event.AccountBoundUserEvent;
@@ -37,7 +37,7 @@ public class Account {
     }
 
     @CommandHandler
-    public void handler(BindAccountToUserCommand command) {
+    public void handler(BindUserToAccountCommand command) {
         apply(new AccountBoundUserEvent(command.getAccountId(), command.getUserId()));
     }
 

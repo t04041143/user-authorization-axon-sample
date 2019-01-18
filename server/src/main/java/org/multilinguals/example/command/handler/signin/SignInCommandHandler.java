@@ -5,7 +5,7 @@ import org.axonframework.commandhandling.model.Aggregate;
 import org.axonframework.commandhandling.model.Repository;
 import org.multilinguals.example.command.aggregate.account.Account;
 import org.multilinguals.example.command.aggregate.account.AccountId;
-import org.multilinguals.example.command.aggregate.account.command.BindAccountToUserCommand;
+import org.multilinguals.example.command.aggregate.account.command.BindUserToAccountCommand;
 import org.multilinguals.example.command.aggregate.account.command.BindUserPasswordToAccountCommand;
 import org.multilinguals.example.command.aggregate.password.UserPassword;
 import org.multilinguals.example.command.aggregate.password.UserPasswordId;
@@ -43,7 +43,7 @@ public class SignInCommandHandler extends AbstractCommandHandler {
             // 如果没有用户和账号关联，那么需要创建用户与账号和密码关联
             if (accountUserId == null) {
                 accountUserId = this.commandGateway.sendAndWait(new CreateUserCommand(accountId, userPasswordId));
-                this.commandGateway.sendAndWait(new BindAccountToUserCommand(accountId, accountUserId));
+                this.commandGateway.sendAndWait(new BindUserToAccountCommand(accountId, accountUserId));
             }
 
             // 检查账号有无关联用户
