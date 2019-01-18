@@ -5,13 +5,13 @@ import org.multilinguals.example.command.AbstractCommand;
 import org.multilinguals.example.command.aggregate.password.UserPasswordId;
 import org.multilinguals.example.command.aggregate.user.UserId;
 
-public class BindUserPasswordToUserCommand extends AbstractCommand {
+public class BindUserToUserPasswordCommand extends AbstractCommand {
     @TargetAggregateIdentifier
     private UserPasswordId userPasswordId;
 
     private UserId userId;
 
-    public BindUserPasswordToUserCommand(UserPasswordId userPasswordId, UserId userId) {
+    public BindUserToUserPasswordCommand(UserPasswordId userPasswordId, UserId userId) {
         this.userPasswordId = userPasswordId;
         this.userId = userId;
     }

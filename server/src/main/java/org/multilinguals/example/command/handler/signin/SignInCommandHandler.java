@@ -6,9 +6,9 @@ import org.axonframework.commandhandling.model.Repository;
 import org.multilinguals.example.command.aggregate.account.Account;
 import org.multilinguals.example.command.aggregate.account.AccountId;
 import org.multilinguals.example.command.aggregate.account.command.BindUserToAccountCommand;
-import org.multilinguals.example.command.aggregate.account.command.BindUserPasswordToAccountCommand;
 import org.multilinguals.example.command.aggregate.password.UserPassword;
 import org.multilinguals.example.command.aggregate.password.UserPasswordId;
+import org.multilinguals.example.command.aggregate.password.command.BindUserToUserPasswordCommand;
 import org.multilinguals.example.command.aggregate.user.UserId;
 import org.multilinguals.example.command.aggregate.user.command.CreateUserCommand;
 import org.multilinguals.example.command.aggregate.usersession.UserSessionId;
@@ -50,9 +50,9 @@ public class SignInCommandHandler extends AbstractCommandHandler {
             Aggregate<UserPassword> userPasswordAggregate = userPasswordRepositoryAggregateRepository.load(userPasswordId.getIdentifier());
             UserId passwordUserId = userPasswordAggregate.invoke(UserPassword::getUserId);
 
-            // 如果账号也没有关联用户，那么需要关联
+            // 如果密码没有关联用户，那么也需要关联
             if (passwordUserId == null) {
-                this.commandGateway.sendAndWait(new BindUserPasswordToAccountCommand(accountId, userPasswordId));
+                this.commandGateway.sendAndWait(new BindUserToUserPasswordCommand(userPasswordId, accountUserId));
             }
 
             // 创建一个用户会话
