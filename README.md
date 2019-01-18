@@ -1,6 +1,5 @@
 # User Authorization Axon Sample
 用于学习Axon Framework的样例，使用前后端分离开发模式，前端用reactjs + dva，服务端使用spring boot + axon。
-采用websocket异步通信的方式。
 
 ## 安装
 

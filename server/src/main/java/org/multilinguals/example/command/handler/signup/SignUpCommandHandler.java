@@ -35,7 +35,9 @@ public class SignUpCommandHandler extends AbstractCommandHandler {
 
             if (accountAggregate.invoke(Account::getUserPasswordId) == null) {
                 // 如果账号存在但是没有关联密码，那么需要注册一个新的密码
-                this.commandGateway.sendAndWait(new SignUpUserPasswordCommand(command.getPassword(), accountId));
+                UserPasswordId userPasswordId = this.commandGateway.sendAndWait(new SignUpUserPasswordCommand(command.getPassword(), accountId));
+
+                bindUserPasswordToAccount(accountId, userPasswordId);
             } else {
                 // 如果账号已经关联密码，说明账号已经被注册，抛出异常中断。
                 throw new AccountSignedUpException();
@@ -44,16 +46,20 @@ public class SignUpCommandHandler extends AbstractCommandHandler {
             // 要注册的账号不存在，需要将账号和密码都注册
             this.commandGateway.sendAndWait(new SignUpAccountCommand(accountId));
             UserPasswordId userPasswordId = this.commandGateway.sendAndWait(new SignUpUserPasswordCommand(command.getPassword(), accountId));
-            // UserPasswordId userPasswordId = new UserPasswordId(userPasswordIdentifier);
-            try {
-                // 绑定账号和用户
-                this.commandGateway.sendAndWait(new BindUserPasswordToAccountCommand(accountId, userPasswordId));
-            } catch (Exception bindAccountEx) {
-                // 如果绑定异常要删除密码，避免脏数据
-                this.commandGateway.send(new DeleteUserPasswordCommand(userPasswordId));
 
-                throw new Exception("User Account Bind User Password Exception!");
-            }
+            bindUserPasswordToAccount(accountId, userPasswordId);
+        }
+    }
+
+    private void bindUserPasswordToAccount(AccountId accountId, UserPasswordId userPasswordId) throws Exception {
+        try {
+            // 绑定账号和用户
+            this.commandGateway.sendAndWait(new BindUserPasswordToAccountCommand(accountId, userPasswordId));
+        } catch (Exception bindAccountEx) {
+            // 如果绑定异常要删除密码，避免脏数据
+            this.commandGateway.send(new DeleteUserPasswordCommand(userPasswordId));
+
+            throw new Exception("User Account Bind User Password Exception!");
         }
     }
 }
