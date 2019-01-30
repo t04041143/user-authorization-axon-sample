@@ -4,7 +4,9 @@ import org.multilinguals.example.query.user.UserDetailsView;
 import org.multilinguals.example.query.user.UserDetailsViewRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -31,12 +33,12 @@ public class RequestValidationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
             return;
         }
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+        Authentication authentication = buildAuthentication(request);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+    private Authentication buildAuthentication(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
 
         // 判断请求头中的token是否存在
@@ -47,13 +49,14 @@ public class RequestValidationFilter extends BasicAuthenticationFilter {
         // 如果token存在，判断是否有效
         String sessionId = token.substring(6);
         List<UserDetailsView> userList = this.userDetailsViewRepository.findByUserSessionId(sessionId);
-
         if (userList != null && userList.size() > 0) {
-            ArrayList<GrantedAuthority> authorities = new ArrayList<>();
             String userId = userList.get(0).getId();
-
             request.setAttribute("reqSenderId", userId);
-            authorities.add(new GrantedAuthorityImpl(userId));
+
+            ArrayList<GrantedAuthority> authorities = new ArrayList<>();
+            // TODO 需要最终变更为从数据库读取
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            // authorities.add(new SimpleGrantedAuthority("ROLE_REST_ADMIN"));
             return new UsernamePasswordAuthenticationToken(userId, null, authorities);
         } else {
             return null;

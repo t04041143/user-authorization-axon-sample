@@ -6,6 +6,7 @@ import org.multilinguals.example.constant.CommonResultCode;
 import org.multilinguals.example.infrastructure.dto.ExceptionResponse;
 import org.multilinguals.example.infrastructure.exception.http.CMRSHTTPException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +29,13 @@ public class CMRSExceptionHandler {
     @ResponseBody
     public ExceptionResponse handleJSR303ViolationException(HttpServletResponse response, JSR303ViolationException ex) {
         return new ExceptionResponse(CommonResultCode.INVALID_COMMAND_PARAMS);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public ExceptionResponse handleAccessDeniedException(HttpServletResponse response, AccessDeniedException ex) {
+        return new ExceptionResponse(CommonResultCode.FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)
