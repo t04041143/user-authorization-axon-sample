@@ -1,5 +1,5 @@
 const TYPE = {
-  ACCOUNT: 0,
+  USERNAME: 0,
   DINGDING: 1
 };
 

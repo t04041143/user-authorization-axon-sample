@@ -8,8 +8,6 @@ import { Col, Row } from "antd";
 )
 export default class SignUpSuccessPage extends React.Component {
   render() {
-    console.log(this.props);
-
     return (
       <DocumentTitle title='注册已成功'>
         <Row>

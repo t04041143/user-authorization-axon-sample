@@ -1,7 +1,6 @@
-import { WS } from "../constants/eventConstants";
-import eventBus from "../utils/eventbus";
-import * as authService from "../services/authorizationService";
+import * as accountService from "../services/accountService";
 import { routerRedux } from "dva/router";
+import { TYPE as ACCOUNT_TYPE } from "../constants/accountConstants";
 
 export default {
   namespace: "account",
@@ -14,51 +13,31 @@ export default {
     updatedAt: null
   },
 
-  subscriptions: {
-    setup({ dispatch, history }) {
-      eventBus.on(WS.CONNECTED, () => {
-        authService.subscribeEvent((message) => {
-          let event = JSON.parse(message.body);
-
-          if (event.name === "AccountSignUpFailedEvent" || event.name === "AccountSignInFailedEvent") {
-            dispatch({
-              type: "happenError",
-              payload: event.data
-            });
-          }
-
-          if (event.name === "AccountSignUpSucceededEvent") {
-            dispatch({
-              type: "signUpSucceeded",
-              payload: event.data
-            });
-          }
-        });
-      });
-    }
-  },
+  subscriptions: {},
 
   effects: {
-    * signupWithPassword({ payload }, { call, put }) {
+    * signupUserName({ payload }, { call, put }) {
       yield put({ type: "error/clear" });
-      let userId = localStorage.getItem("userId");
-      yield call(authService.signUpWithPassword, userId, payload["accountId"], payload["password"]);
+      try {
+        yield call(accountService.userSignUpUserName, payload["username"], payload["password"]);
+        yield put({ type: "save", payload: { id: payload["username"], type: ACCOUNT_TYPE.USERNAME } });
+        yield put(routerRedux.push("/sign-up-success"));
+      } catch (err) {
+        yield put({ type: "error/add", payload: { model: "account", error: err.response.data } });
+      }
     },
 
     * signInWithPassword({ payload }, { call, put }) {
       yield put({ type: "error/clear" });
-      let userId = localStorage.getItem("userId");
-      yield call(authService.signInWithPassword, userId, payload["accountId"], payload["password"]);
-    },
-
-    * signUpSucceeded({ payload }, { put }) {
-      let accountId = payload.accountId;
-      yield put({ type: "save", payload: { ...accountId } });
-      yield put(routerRedux.push("/sign-up-success"));
-    },
-
-    * happenError({ payload }, { call, put }) {
-      yield put({ type: "error/add", payload: { model: "account", error: payload } });
+      try {
+        const response = yield call(accountService.signInWithPassword,
+          payload["idInAccountType"], ACCOUNT_TYPE.USERNAME, payload["password"]);
+        localStorage.setItem("userId", response.data.userId);
+        localStorage.setItem("token", response.data.token);
+        yield put(routerRedux.push("/sign-in-success"));
+      } catch (err) {
+        yield put({ type: "error/add", payload: { model: "account", error: err.response.data } });
+      }
     }
   },
 

@@ -1,6 +1,4 @@
-import { getUserDetails } from "../services/userService";
-import { WS } from "../constants/eventConstants";
-import eventBus from "../utils/eventbus";
+import * as userService from "../services/userService";
 
 export default {
   namespace: "user",
@@ -18,15 +16,12 @@ export default {
 
   subscriptions: {
     setup({ dispatch, history }) {
-      eventBus.on(WS.CONNECTED, () => {
-
-      });
     }
   },
 
   effects: {
     * getUserDetails({ payload }, { call, put }) {  // eslint-disable-line
-      let response = yield call(getUserDetails, localStorage.getItem("userId"));
+      let response = yield call(userService.getSelfDetails);
       yield put({ type: "save", payload: response.data });
     }
   },

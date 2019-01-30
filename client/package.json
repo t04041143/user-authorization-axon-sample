@@ -2,24 +2,27 @@
   "private": true,
   "scripts": {
     "start": "roadhog server",
-    "build": "roadhog build",
+    "build": "roadhog build --env=prod",
     "lint": "eslint --ext .js src test",
     "precommit": "npm run lint"
   },
   "dependencies": {
     "antd": "^3.9.1",
+    "axios": "^0.18.0",
     "babel-plugin-import": "^1.8.0",
+    "babel-polyfill": "^6.26.0",
     "dva": "^2.4.0",
+    "dva-loading": "^2.0.6",
     "lodash": "^4.17.11",
+    "moment": "^2.24.0",
     "rc-queue-anim": "^1.6.6",
     "react": "^16.2.0",
     "react-document-title": "^2.0.3",
-    "react-dom": "^16.2.0",
-    "sockjs-client": "^1.1.5",
-    "stompjs": "^2.3.3"
+    "react-dom": "^16.2.0"
   },
   "devDependencies": {
     "babel-plugin-dva-hmr": "^0.3.2",
+    "bower-webpack-plugin": "^0.1.9",
     "eslint": "^4.14.0",
     "eslint-config-umi": "^0.1.1",
     "eslint-plugin-flowtype": "^2.34.1",

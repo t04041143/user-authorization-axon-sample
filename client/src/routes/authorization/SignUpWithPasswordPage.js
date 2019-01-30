@@ -13,9 +13,9 @@ class SignUpWithPasswordPage extends React.Component {
     this.props.form.validateFields((errors, values) => {
       if (!errors) {
         this.props.dispatch({
-          type: "account/signupWithPassword",
+          type: "account/signupUserName",
           payload: {
-            accountId: values["accountId"],
+            username: values["username"],
             password: values["password"]
           }
         });
@@ -41,10 +41,9 @@ class SignUpWithPasswordPage extends React.Component {
 
     const { getFieldProps } = this.props.form;
 
-    const accountIdProps = getFieldProps("accountId", {
+    const usernameProps = getFieldProps("username", {
       rules: [
         { required: true, pattern: /^(?=.*[a-zA-Z])(?=.*\d)[\s\S]{4,16}$/, message: "4到16个字符，至少有字母和数字" }
-        //{ validator: this.mobileExisted }
       ]
     });
 
@@ -67,7 +66,7 @@ class SignUpWithPasswordPage extends React.Component {
       ]
     });
 
-    const errorTips = this.props.error.account ? <ErrorTips errors={this.props.error.account}/> : null;
+    const errorTips = this.props.error["account"] ? <ErrorTips errors={this.props.error["account"]}/> : null;
 
     return (
       <DocumentTitle title='用户注册'>
@@ -82,7 +81,7 @@ class SignUpWithPasswordPage extends React.Component {
                 </Col>
               </Row>
               <FormItem {...formItemLayout} label="用户名">
-                <Input {...accountIdProps} type="text" autoComplete="off"/>
+                <Input {...usernameProps} type="text" autoComplete="off"/>
               </FormItem>
               <FormItem {...formItemLayout} label="密码">
                 <Input {...passwordProps} type="password" autoComplete="off"/>

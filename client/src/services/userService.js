@@ -1,5 +1,7 @@
-import httpClient from "../utils/request";
+import httpClient from "../utils/http-client";
 
-export function getUserDetails(userId) {
-  return httpClient(`http://localhost:9580/user/details?userId=${userId}`);
+export function getSelfDetails() {
+  return httpClient.get(`/user/self-details`, {
+    headers: { "Authorization": `Token ${localStorage.getItem("token")}` }
+  });
 }

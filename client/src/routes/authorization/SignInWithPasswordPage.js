@@ -15,7 +15,7 @@ class SignInWithPasswordPage extends React.Component {
         this.props.dispatch({
           type: "account/signInWithPassword",
           payload: {
-            accountId: values["accountId"],
+            idInAccountType: values["idInAccountType"],
             password: values["password"]
           }
         });
@@ -33,7 +33,7 @@ class SignInWithPasswordPage extends React.Component {
 
     const { getFieldProps } = this.props.form;
 
-    const accountIdProps = getFieldProps("accountId", {
+    const idInAccountTypeProps = getFieldProps("idInAccountType", {
       rules: [
         { required: true, pattern: /^(?=.*[a-zA-Z])(?=.*\d)[\s\S]{4,16}$/, message: "4到16个字符，至少有字母和数字" }
       ]
@@ -45,7 +45,7 @@ class SignInWithPasswordPage extends React.Component {
       ]
     });
 
-    const errorTips = this.props.error.account ? <ErrorTips errors={this.props.error.account}/> : null;
+    const errorTips = this.props.error["account"] ? <ErrorTips errors={this.props.error["account"]}/> : null;
 
     return (
       <DocumentTitle title='用户登录'>
@@ -60,7 +60,7 @@ class SignInWithPasswordPage extends React.Component {
                 </Col>
               </Row>
               <FormItem {...formItemLayout} label="用户名">
-                <Input {...accountIdProps} type="text" autoComplete="off"/>
+                <Input {...idInAccountTypeProps} type="text" autoComplete="off"/>
               </FormItem>
               <FormItem {...formItemLayout} label="密码">
                 <Input {...passwordProps} type="password" autoComplete="off"/>
